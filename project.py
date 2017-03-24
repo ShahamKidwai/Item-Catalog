@@ -53,13 +53,12 @@ def edititem(category_id, item_id):
        category = request.form['category']
        uitem.title = title
        uitem.description = description
-       uitem.categoryID = category
        session.add(uitem)
        session.commit()
        return redirect(url_for('showitems', category_id = category_id))
     else:
          cates = session.query(Category).all()
-         return render_template('item-edit.html', i = uitem, category_id = category_id, cat = cates)
+         return render_template('item-edit.html', i = uitem, category_id = category_id)
 
 @app.route('/category/<int:category_id>/Items/new',  methods = ['GET', 'POST'])
 def newitem(category_id):
