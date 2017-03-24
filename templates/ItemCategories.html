@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>Item Catalog</title>
+<style>
+.categories{
+ font-size: 25px;
+}
+
+.header{
+ font-size: 35px;
+}
+
+.categ-column{ 
+}
+</style>
+</head>
+<body>
+<div class = "header"><center><h1>Item Catalog<h1></center></div>
+<br>
+<br>
+<div class = 'container'>
+<h1>Categories</h1>
+{% for i in cate %}
+    <div class = "categories">
+        <div class = "categ-column"><p><a href = "{{url_for('showitems', category_id = i.id)}}">{{i.name}}</a><p></div>
+    </div>
+{% endfor %}
+</div>
+</body>
+</html>

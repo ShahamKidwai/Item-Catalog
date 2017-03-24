@@ -1,0 +1,24 @@
+<html>
+<head>
+<title> category</title>
+<style>
+.iteminfo{
+   font-size: 25px;
+   margin-top: 12px;
+}
+
+select {
+    width: 170;
+}
+
+</style>
+</head>
+<body>
+<form action = "{{url_for('delete_item', category_id = i.category_id, item_id = i.id)}}" method = 'post'>
+   <h2>Delete Item</h2>
+   <h3>Are you sure you want to delete {{i.title}}</h3>
+   <input type='submit' value='Submit'>
+</form>
+
+</body>
+</html>

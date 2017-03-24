@@ -1,0 +1,47 @@
+<html>
+<head>
+<title> category</title>
+<style>
+.iteminfo{
+   font-size: 25px;
+   margin-top: 12px;
+}
+
+select {
+    width: 170;
+}
+</style>
+</head>
+<body>
+<h1> Add New Item<h1>
+<form action = "{{url_for('newitem', category_id = category_id)}}" method = 'post'>
+   <label>
+   <div class = "iteminfo"> Title</div>
+   </label>
+   <input type = 'text'  name = 'name'>
+   <br>
+   <label>
+   <div class = "iteminfo">Description</div>
+   </label>
+   <input type = 'text'  name = 'description'>
+   <br>
+   <label>
+   <div class = "iteminfo">Category</div>
+   </label>
+     <select name="categories">
+    <option value="Soccer">Soccer</option>
+    <option value="BasketBall">BasketBall</option>
+    <option value="Baseball">BaseBall</option>
+    <option value="Frisbee">Frisbee</option>
+	<option value="Snowboarding">Snowboarding</option>
+	<option value="RockClimbing">RockClimbing</option>
+	<option value="Football">Football</option>
+	<option value="Skating">Skating</option>
+	<option value="Hockey">Hockey</option>
+  </select>
+   <br>
+   <br>
+   <input type='submit' value='Submit'>
+</form>
+</body>
+</html>

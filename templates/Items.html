@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>Item Catalog</title>
+<style>
+.categories{
+ font-size: 25px;
+}
+.e1{
+  margin-right: 8px;
+}
+
+.header{
+ font-size: 35px;
+}
+.editdel {
+   display: block;
+}
+
+</style>
+</head>
+<body>
+<div class = "header"><center><h1>Item Catalog<h1></center></div>
+<br>
+<br>
+<div class = 'container'>
+<h1>Category: {{category.name}}</h1>
+<br>
+<h3><a href = "/category/1/Items/new">Add New Item</a></h3>
+<h1>Items</h1>
+{% for i in item  %}
+    <div class = "categories">
+        <div class = "item-column"><h3><a href = {{url_for('ItemDescription', category_id = category.id, item_id = i.id)}}>{{i.title}}</a><h3></div>
+    </div>
+	<div class = "editdel">
+	<a href = "{{url_for('showitems', category_id = i.id)}}
+	<div class = "e1"><a href = {{url_for('edititem', category_id = category.id, item_id = i.id)}}><h4>Edit Item</h4></a></div>
+	<div class = "e2"><a href = {{url_for('delete_item', category_id = category.id, item_id = i.id)}}> <h4>Delete Item</h4></a></div>
+	</div>
+	{% endfor %}
+</div>
+<br>
+
+</body>
+</html>
