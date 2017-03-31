@@ -25,7 +25,7 @@
 <div class = 'container'>
 <h1>Category: {{category.name}}</h1>
 <br>
-<h3><a href = "/category/1/Items/new">Add New Item</a></h3>
+<h3><a href = {{url_for('newitem', category_id = category.id)}}>Add New Item</a></h3>
 <h1>Items</h1>
 {% for i in item  %}
     <div class = "categories">

@@ -16,31 +16,26 @@ select {
 <body>
 
 <h1> Edit Item<h1>
-<form action = "{{url_for('edititem', category_id = category_id, item_id = i.id)}}" method = 'post'>
+<form action = "{{url_for('edititem', category_id = cat.id, item_id = item.id)}}" method = 'post'>
    <label>
    <div class = "iteminfo"> Title</div>
    </label>
-   <input type = 'text'  name = 'title'>
+   <input type = 'text'  name = 'title' placeholder="{{item.title}}">
    <br>
    <label>
    <div class = "iteminfo">Description</div>
    </label>
-   <input type = 'text'  name = 'description'>
+   <input type = 'text'  name = 'description' placeholder="{{item.description}}">
    <br>
    <label>
    <div class = "iteminfo">Category</div>
    </label>
     <select name="category">
-    <option value="Soccer">Soccer</option>
-    <option value="BasketBall">BasketBall</option>
-    <option value="Baseball">Baseball</option>
-    <option value="Frisbee">Frisbee</option>
-	<option value="Snowboarding">Snowboarding</option>
-	<option value="RockClimbing">RockClimbing</option>
-	<option value="Football">Football</option>
-	<option value="Skating">Skating</option>
-	<option value="Hockey">Hockey</option>
-  </select>
+    {% for c in categories %}
+	  <option value = "{{c.id}}">{{c.name}}</option>
+	{% endfor %}
+	<option value = "{{cat.id}}" selected>{{cat.name}}</option>
+	</select>
    <br>
    <br>
    <input type='submit' value='Submit'>

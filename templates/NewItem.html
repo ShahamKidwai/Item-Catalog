@@ -6,7 +6,6 @@
    font-size: 25px;
    margin-top: 12px;
 }
-
 select {
     width: 170;
 }
@@ -28,16 +27,11 @@ select {
    <label>
    <div class = "iteminfo">Category</div>
    </label>
-     <select name="categories">
-    <option value="Soccer">Soccer</option>
-    <option value="BasketBall">BasketBall</option>
-    <option value="Baseball">BaseBall</option>
-    <option value="Frisbee">Frisbee</option>
-	<option value="Snowboarding">Snowboarding</option>
-	<option value="RockClimbing">RockClimbing</option>
-	<option value="Football">Football</option>
-	<option value="Skating">Skating</option>
-	<option value="Hockey">Hockey</option>
+   <select name="category">
+    {% for c in categories %}
+	  <option value = "{{c.id}}">{{c.name}}</option>
+	{% endfor %}
+	<option value = "{{cat.id}}" selected>{{cat.name}}</option>
   </select>
    <br>
    <br>

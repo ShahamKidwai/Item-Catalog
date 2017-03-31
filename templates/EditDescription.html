@@ -1,0 +1,47 @@
+<html>
+<head>
+<title> category</title>
+<style>
+.container{
+margin-left: auto;
+margin-right: auto;
+width: 960px;
+}
+
+.iteminfo{
+   font-size: 25px;
+   margin-top: 12px;
+  font-size: xx-large;
+}
+
+.item-name {
+    font-size: xx-large;
+}
+
+textarea {
+    width: 600;
+    height: 100;
+}
+
+input[type="submit"] {
+    height: 30;
+    width: 80;
+}
+</style>
+</head>
+<body>
+<div class = 'container'>
+<div class = " item-name">Item Name: {{item.title}}</div>
+<form action = "{{url_for('editdescription', category_id = cat.id, item_id = item.id)}}" method = 'post'>
+   <label>
+   <div class = "iteminfo">Description</div>
+   </label>
+   <br>
+   <textarea name="description" placeholder="{{item.description}}"></textarea>
+   <br>
+   <br>
+   <input type='submit' value='Submit'>
+</form>
+</div>
+</body>
+</html>

@@ -2,26 +2,38 @@
 <head>
 <title>Item Catalog</title>
 <style>
-.container{
-margin-left: auto;
-margin-right: auto;
-width: 960px;
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 960px;
 }
+
 .description{
 font-size: 20px;
+}
+
+.item-name {
+    font-size: xx-large;
+}
+
+.iteminfo{
+   font-size: xx-large;
 }
 </style>
 </head>
 <body>
 <br>
 <div class = 'container'>
-<div><h2>{{item.title}}</h2></div>
+<div class = " item-name">Item Name: {{item.title}}</div>
+<br>
+<div class = "iteminfo">Description</div>
+<br>
 <div class = "description">
 {{item.description}}
 </div>
 <div class = "editdel">
-	<div class = "e1"><a href = "/category/1/items/1/edit"><h4>Edit</h4></a></div>
-	<div class = "e2"><a href = "/category/1/items/1/delete"><h4>Delete</h4></a></div>
+	<div class = "e1"><a href = "{{url_for('editdescription', category_id = category.id, item_id = item.id)}}"><h4>Edit</h4></a></div>
+	<div class = "e2"><a href = "{{url_for('deletedescription', category_id = category.id, item_id = item.id)}}">Delete</h4></a></div>
 	</div>
 </div>
 </body>
