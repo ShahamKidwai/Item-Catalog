@@ -1,24 +1,12 @@
-<html>
-<head>
-<title> category</title>
-<style>
-.iteminfo{
-   font-size: 25px;
-   margin-top: 12px;
-}
-
-select {
-    width: 170;
-}
-
-</style>
-</head>
-<body>
-
+{%extends "Base.html"%}
+{%block content%}
+{{ super()}}
+{% endblock %}
+{%block main %}
 <h1> Edit Item<h1>
 <form action = "{{url_for('edititem', category_id = cat.id, item_id = item.id)}}" method = 'post'>
    <label>
-   <div class = "iteminfo"> Title</div>
+   <div class = "itemtitle"> Title</div>
    </label>
    <input type = 'text'  name = 'title' placeholder="{{item.title}}">
    <br>
@@ -39,7 +27,5 @@ select {
    <br>
    <br>
    <input type='submit' value='Submit'>
-
 </form>
-</body>
-</html>
+{% endblock %}

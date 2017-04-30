@@ -1,17 +1,8 @@
-<html>
-<head>
-<title> category</title>
-<style>
-.iteminfo{
-   font-size: 25px;
-   margin-top: 12px;
-}
-select {
-    width: 170;
-}
-</style>
-</head>
-<body>
+{%extends "Base.html"%}
+{%block content%}
+{{ super()}}
+{% endblock %}
+{%block main %}
 <h1> Add New Item<h1>
 <form action = "{{url_for('newitem', category_id = category_id)}}" method = 'post'>
    <label>
@@ -37,5 +28,4 @@ select {
    <br>
    <input type='submit' value='Submit'>
 </form>
-</body>
-</html>
+{% endblock %}

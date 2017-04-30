@@ -1,21 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>{% block title %}{% endblock %}Catolog App</title>
-    <link href="{{ url_for('static', filename = 'bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename = 'my.css') }}" rel="stylesheet">
-  </head>
-  <body>
-    <div id="content">{% block content %}{% endblock %}</div>
-    <div id="footer">
-        {% block footer %}
-        &copy; Copyright 2008 by <a href="http://domain.invalid/">you</a>.
-        {% endblock %}
-    </div>
+    <style>
+	 select {
+        width: 170;
+      }
+     .categories{
+       font-size: 25px;
+      }
+     .e1{
+        margin-right: 8px;
+      }
+
+     .header{
+       font-size: 35px;
+      }
+
+     .editdel {
+        display: block;
+      } 
+
+     .col-md-2 {
+       border-right-style: ridge;
+      }
+
+     .container {
+      margin-left: auto;
+      margin-right: auto;
+      width: 960px;
+      }
+	  
+	.heading {
+       color: azure;
+       text-align: center; 
+     }
+
+    .description{
+      font-size: 20px;
+     }
+
+    .item-name {
+     font-size: xx-large;
+    }
+	
+	.item-Category{
+	  font-size: xx-large;
+	}
+
+	p.heading {
+     color: azure;
+    text-align: center;
+    }
+	
+    .iteminfo{
+     font-size: x-large;
+     }
+
+    .itemdes{
+       font-size: 25px;
+       margin-top: 12px;
+       font-size: xx-large;
+     }
+	 
+	 textarea {
+    width: 600;
+    height: 100;
+    }
+    
+	input[type="submit"] {
+    height: 30;
+    width: 80;
+     }
+	 
+    select {
+      width: 170;
+    }
+	
+	.itemtitle{
+       font-size: 25px;
+       margin-top: 12px;
+     }
+	 
+	button.btn.btn-success {
+       margin-top: 6px;
+     }
+	 
+	</style>
+  
+  
+     <meta charset="utf-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+     <title>Catolog App</title>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+     </head>
+      <body">   
+	 <nav class="navbar navbar-inverse bg-primary">
+	   <div class = "row">
+	   <div class = "col-md-10">
+	   <p class="h1 heading">Item Catalog</p>
+       </div>
+	<!-- Small modal -->
+       <div class = "col-md-2">
+	   <div class = "container">
+             <div{% if isLogin %} style = 'display: none;' {% endif %}><a class = "loginlogout" href="{{ url_for('showLogin',  next=request.url)}}"><button type="button" class="btn btn-success">Login</button></a></div>
+             <div{% if not isLogin %} style = 'display: none;' {% endif %}><a class = "loginlogout" href="{{url_for('logout',  next=request.url)}}"><button type="button" class="btn btn-success">Logout</button></a></div>
+	  </div>
+	  </nav>
+	  </div>
+	 <div class = "container-fluid">
+	 <div class = "row">
+	 <div class = "col-md-2">
+	 {% block content %}
+	    <div class = "sidelinks">
+        <br>
+		<h1>Categories</h1>
+		<br>
+        {% for i in cate %}
+          <div class = "categories">
+          <div class = "categ-column"><p><a href = "{{url_for('showitems', category_id = i.id)}}">{{i.name}}</a><p></div>
+          </div>
+       {% endfor %}
+	   {% endblock %}
+	   </div>
+	 </div>
+	 <div class = "col-md-10 right-menu">
+	 {% block main %}
+	 
+	 {% endblock %} 
+	 </div>
+	 </div>
+	 </div>
+     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 </body>
 </html>

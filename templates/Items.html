@@ -1,44 +1,26 @@
-<html>
-<head>
-<title>Item Catalog</title>
-<style>
-.categories{
- font-size: 25px;
-}
-.e1{
-  margin-right: 8px;
-}
 
-.header{
- font-size: 35px;
-}
-.editdel {
-   display: block;
-}
+{%extends "Base.html"%}
 
-</style>
-</head>
-<body>
-<div class = "header"><center><h1>Item Catalog<h1></center></div>
-<br>
+{%block content%}
+{{ super() }}
+{% endblock %}
+{%block main %}
 <br>
 <div class = 'container'>
 <h1>Category: {{category.name}}</h1>
 <br>
 <h3><a href = {{url_for('newitem', category_id = category.id)}}>Add New Item</a></h3>
-<h1>Items</h1>
-{% for i in item  %}
-    <div class = "categories">
-        <div class = "item-column"><h3><a href = {{url_for('ItemDescription', category_id = category.id, item_id = i.id)}}>{{i.title}}</a><h3></div>
-    </div>
+<br>
+<h1>Items:</h1>
+<br>
+{% for i in items  %}
+    <div class = "item-column"><h2><a href = {{url_for('ItemDescription', category_id = category.id, item_id = i.id)}}>{{i.title}}</a><h2></div>
 	<div class = "editdel">
-	<a href = "{{url_for('showitems', category_id = i.id)}}
 	<div class = "e1"><a href = {{url_for('edititem', category_id = category.id, item_id = i.id)}}><h4>Edit Item</h4></a></div>
 	<div class = "e2"><a href = {{url_for('delete_item', category_id = category.id, item_id = i.id)}}> <h4>Delete Item</h4></a></div>
 	</div>
+	<br>
 	{% endfor %}
-</div>
-<br>
+{% endblock %}
 
-</body>
-</html>
+

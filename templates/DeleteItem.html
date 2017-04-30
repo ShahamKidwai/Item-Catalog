@@ -1,24 +1,15 @@
-<html>
-<head>
-<title> category</title>
-<style>
-.iteminfo{
-   font-size: 25px;
-   margin-top: 12px;
-}
-
-select {
-    width: 170;
-}
-
-</style>
-</head>
-<body>
+{%extends "Base.html"%}
+{%block content%}
+{{ super()}}
+{% endblock %}
+{%block main %}
 <form action = "{{url_for('delete_item', category_id = i.category_id, item_id = i.id)}}" method = 'post'>
    <h2>Delete Item</h2>
-   <h3>Are you sure you want to delete {{i.title}}</h3>
+   <h3>Are you sure you want to delete the item {{i.title}} ?</h3>
+   <br>
    <input type='submit' value='Submit'>
-</form>
+   <button type="cancel" onclick="window.location='{{url_for('showitems', category_id = i.category_id)}}';return false;">Cancel</button>
+ </form>
+{% endblock %}
 
-</body>
-</html>
+
