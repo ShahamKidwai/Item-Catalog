@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Category, Item
+from database_setup import Base, Category, Item, User
 
 from flask import session as login_session
 import random, string
@@ -40,6 +40,14 @@ def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
     login_session['state'] = state
     return render_template('login.html', STATE=state)
+
+
+@app.route('/logout')
+def logout():
+    gdisconnect()
+    Categories = session.query(Category).all()
+    return render_template('ItemCategories.html', cate = Categories) 
+
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -103,6 +111,10 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+    user_id = getUserID(login_session['email'])
+    if not user_id:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
 
     output = ''
     output += '<h1>Welcome, '
@@ -136,6 +148,7 @@ def gdisconnect():
     	del login_session['username']
     	del login_session['email']
     	del login_session['picture']
+    	del login_session['user_id']
     	response = make_response(json.dumps('Successfully disconnected.'), 200)
     	response.headers['Content-Type'] = 'application/json'
     	return response
@@ -155,15 +168,25 @@ def showitemsJSON(category, item):
 @app.route('/')
 @app.route('/categories')
 def showcategories():
+    if 'user_id' in login_session:
+        islogin = True
+    elif ('user_id' not in login_session):
+          islogin = False
+        
     Categories = session.query(Category).all()
-    return render_template('ItemCategories.html', cate = Categories)
+    return render_template('ItemCategories.html', cate = Categories, isLogin = islogin)
 
 @app.route('/category/<int:category_id>/Items')
 @app.route('/category/<int:category_id>')
 def showitems(category_id):
+    if 'user_id' in login_session:
+        islogin = True
+    elif ('user_id' not in login_session):
+        islogin = False
     category = session.query(Category).filter_by(id=category_id).one()
+    Categories = session.query(Category).all()
     Items = session.query(Item).filter_by(category_id=category.id).all()
-    return render_template('Items.html', category = category, item = Items )
+    return render_template('Items.html', category = category, cate = Categories,  items = Items, isLogin = islogin )
 
 @app.route('/category/new')
 def newcategory():
@@ -171,12 +194,27 @@ def newcategory():
 
 @app.route('/category/<int:category_id>/Items/<int:item_id>/')
 def ItemDescription(category_id, item_id):
+    if 'user_id' in login_session:
+        islogin = True
+    elif ('user_id' not in login_session):
+        islogin = False
     category = session.query(Category).filter_by(id = category_id).one()
+    Categories = session.query(Category).all()
     itemone = session.query(Item).filter_by(id = item_id).one()
-    return render_template('ItemDescription.html', category = category, item = itemone)
+    Items = session.query(Item).filter_by(category_id=category.id).all()
+    return render_template('ItemDescription.html', category = category, cate = Categories, item = itemone, items = Items, isLogin = islogin)
 
 @app.route('/category/<int:category_id>/Items/<int:item_id>/edit', methods = ['GET', 'POST'])
 def edititem(category_id, item_id):
+    uitem = session.query(Item).filter_by(id = item_id, category_id = category_id).one()
+    cates = session.query(Category).all()
+    category = session.query(Category).filter_by(id = category_id).one()
+    Categories = session.query(Category).all()
+    if 'user_id' in login_session:
+        islogin = True
+    elif ('user_id' not in login_session):
+        islogin = False
+        
     if request.method == 'POST':
        title = request.form['title']
        description = request.form['description']
@@ -188,14 +226,17 @@ def edititem(category_id, item_id):
        session.commit()
        return redirect(url_for('showitems', category_id = category_id))
     else:
-         cates = session.query(Category).all()
-         category = session.query(Category).filter_by(id = category_id).one()
-         uitem = session.query(Item).filter_by(id = item_id, category_id = category_id).one()
-         return render_template('item-edit.html', item = uitem, category_id = category_id, cat = category, cats = cates)
+         return render_template('item-edit.html', item = uitem, cate = Categories, category_id = category_id, cat = category, cats = cates, isLogin = islogin)
 
 @app.route('/category/<int:category_id>/Items/<int:item_id>/editdescription', methods = ['GET', 'POST'])
 def editdescription(category_id, item_id):
     uitem = session.query(Item).filter_by(id = item_id, category_id = category_id).one()
+    cates = session.query(Category).all()
+    category = session.query(Category).filter_by(id = category_id).one()
+    if 'user_id' in login_session:
+        islogin = True
+    elif ('user_id' not in login_session):
+        islogin = False
     if request.method == 'POST':
        description = request.form['description']
        uitem.description = description
@@ -203,10 +244,7 @@ def editdescription(category_id, item_id):
        session.commit()
        return redirect(url_for('ItemDescription', category_id = category_id, item_id = item_id))
     else:
-         cates = session.query(Category).all()
-         category = session.query(Category).filter_by(id = category_id).one()
-         uitem = session.query(Item).filter_by(id = item_id, category_id = category_id).one()
-         return render_template('EditDescription.html', item = uitem, category_id = category.id, cat = category)
+         return render_template('EditDescription.html', item = uitem, category_id = category.id, cate = cates, cat = category, isLogin = islogin)
         
 
 
@@ -214,47 +252,75 @@ def editdescription(category_id, item_id):
 def deletedescription(category_id, item_id):
     uitem = session.query(Item).filter_by(id = item_id, category_id = category_id).one()
     category = session.query(Category).filter_by(id = category_id).one()
+    Categories = session.query(Category).all()
+    if 'user_id' in login_session:
+        islogin = True
+    elif ('user_id' not in login_session):
+        islogin = False
     if request.method == 'POST':
        uitem.description = " "
        session.add(uitem)
        session.commit()
        return redirect(url_for('ItemDescription', category_id = category_id, item_id = item_id))
     else:
-         return render_template('DeleteDescription.html', item = uitem, cat = category, category_id = category.id)
+         return render_template('DeleteDescription.html', item = uitem, cate = Categories, cat = category, category_id = category.id, isLogin = islogin)
         
 
 @app.route('/category/<int:category_id>/Items/new',  methods = ['GET', 'POST'])
 def newitem(category_id):
+     if 'user_id' in login_session:
+        islogin = True
+     elif ('user_id' not in login_session):
+        islogin = False
      if request.method == 'POST':
-        newItem = Item(title=request.form['name'], description=request.form['description'],  category_id= request.form['category'])
+        newItem = Item(title=request.form['name'], description=request.form['description'],  category_id= request.form['category'], user_id=login_session['user_id'])
         session.add(newItem)
         session.commit()
         return redirect(url_for('showitems', category_id = category_id))
      else:
           categories = session.query(Category).all()
           category = session.query(Category).filter_by(id = category_id).one()
-          return render_template('NewItem.html', category_id = category_id, categories = categories, cat = category)
+          return render_template('NewItem.html', category_id = category_id, cate = categories, categories = categories, cat = category, isLogin = islogin)
         
 
 @app.route('/category/<int:category_id>/Items/<int:item_id>/delete', methods = ['GET', 'POST'])
 def delete_item(category_id, item_id):
     itemToDelete = session.query(Item).filter_by(id = item_id).one()
+    Categories = session.query(Category).all()
+    if 'user_id' in login_session:
+        islogin = True
+    elif ('user_id' not in login_session):
+        islogin = False
     if request.method == 'POST':
        session.delete(itemToDelete)
        session.commit()
        return redirect(url_for('showitems', category_id = category_id))
     else:
-         return render_template('DeleteItem.html', i = itemToDelete)
+         return render_template('DeleteItem.html', i = itemToDelete, cate = Categories, isLogin = islogin)
+
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id = user_id).one()
+    return user
+
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
+
+def createUser(login_session):
+    newUser = User(name = login_session['username'], email = login_session['email'], picture = login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email = login_session['email']).one()
+    return user.id
+
+
 
 if __name__ == '__main__':
      app.secret_key = 'super secret key'
      app.debug = True
      app.run(host = '0.0.0.0', port = 5000)
-
-
-
-     
-
-
-
-
