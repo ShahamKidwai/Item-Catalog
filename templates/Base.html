@@ -113,13 +113,8 @@
 	 
 	button.btn.btn-success {
        margin-top: 6px;
-     }
-	 
-	
-	 
+     } 
 	</style>
-  
-  
      <meta charset="utf-8">
      <meta http-equiv="X-UA-Compatible" content="IE=edge">
      <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -133,7 +128,6 @@
 	   <div class = "col-md-10">
 	   <p class="h1 heading">Item Catalog</p>
        </div>
-	<!-- Small modal -->
        <div class = "col-md-2">
 	   <div class = "container">
              <div{% if isLogin %} style = 'display: none;' {% endif %}><a class = "loginlogout" href="{{ url_for('showLogin',  next=request.url)}}"><button type="button" class="btn btn-success">Login</button></a></div>

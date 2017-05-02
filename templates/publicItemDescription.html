@@ -1,0 +1,17 @@
+{% extends "Base.html" %}
+
+{%block content%}
+{{ super() }}
+{% endblock %}
+{%block main %}
+<div class = 'container'>
+<div class = "item-Category">Item Category: {{category.name}}</div>
+<div class = " item-name">Item Name: {{item.title}}</div>
+<br>
+<div class = "iteminfo">Item Description:</div>
+<div class = "description">
+{{item.description}}
+</div>
+<br>
+{% endblock %}
+
