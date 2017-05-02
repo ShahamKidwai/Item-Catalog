@@ -214,15 +214,22 @@ def showitems(category_id):
 
 @app.route('/category/<int:category_id>/Items/<int:item_id>/')
 def ItemDescription(category_id, item_id):
-    if 'user_id' in login_session:
-        islogin = True
-    elif ('user_id' not in login_session):
-        islogin = False
     category = session.query(Category).filter_by(id = category_id).one()
     Categories = session.query(Category).all()
     itemone = session.query(Item).filter_by(id = item_id).one()
+    creator = getUserInfo(category.user_id)
     Items = session.query(Item).filter_by(category_id=category.id).all()
-    return render_template('ItemDescription.html', category = category, cate = Categories, item = itemone, items = Items, isLogin = islogin)
+    if 'user_id' not in login_session:
+        islogin = False
+        return render_template('publicItemDescription.html', category = category, cate = Categories,  item = itemone, items = Items,  isLogin = islogin)
+    else:
+         if 'user_id' in login_session:
+             if creator.id != login_session['user_id']:
+                islogin = True
+                return render_template('publicItemDescription.html', category = category, cate = Categories, item = itemone, items = Items, isLogin = islogin)
+             else:
+                  islogin = True
+                  return render_template('ItemDescription.html', category = category, cate = Categories, item = itemone, items = Items, isLogin = islogin)
 
 @app.route('/category/<int:category_id>/Items/<int:item_id>/edit', methods = ['GET', 'POST'])
 def edititem(category_id, item_id):
