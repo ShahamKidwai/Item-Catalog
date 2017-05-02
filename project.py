@@ -46,7 +46,7 @@ def showLogin():
 def logout():
     gdisconnect()
     Categories = session.query(Category).all()
-    return render_template('ItemCategories.html', cate = Categories) 
+    return render_template('publicCategories.html', cate = Categories) 
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -168,29 +168,49 @@ def showitemsJSON(category, item):
 @app.route('/')
 @app.route('/categories')
 def showcategories():
-    if 'user_id' in login_session:
-        islogin = True
-    elif ('user_id' not in login_session):
-          islogin = False
-        
     Categories = session.query(Category).all()
+    if 'user_id' not in login_session:
+        islogin = False
+        return render_template('publicCategories.html', cate = Categories, isLogin = islogin)
+    elif ('user_id' in login_session):
+          islogin = True
     return render_template('ItemCategories.html', cate = Categories, isLogin = islogin)
+
+
+@app.route('/category/new/', methods = ['GET', 'POST'])
+def newCategory():
+   if 'user_id' in login_session:
+       islogin = True
+   elif ('user_id' not in login_session):
+        islogin = False
+   if request.method == 'POST':
+      newCategory = Category(
+        name = request.form['name'], user_id = login_session['user_id'])
+      session.add(newCategory)
+      session.commit()
+      return redirect(url_for('showcategories'))
+   else:
+       return render_template('newCategory.html')
+
 
 @app.route('/category/<int:category_id>/Items')
 @app.route('/category/<int:category_id>')
 def showitems(category_id):
-    if 'user_id' in login_session:
-        islogin = True
-    elif ('user_id' not in login_session):
-        islogin = False
     category = session.query(Category).filter_by(id=category_id).one()
+    creator = getUserInfo(category.user_id)
     Categories = session.query(Category).all()
     Items = session.query(Item).filter_by(category_id=category.id).all()
-    return render_template('Items.html', category = category, cate = Categories,  items = Items, isLogin = islogin )
-
-@app.route('/category/new')
-def newcategory():
-    return "category items"
+    if 'user_id' not in login_session:
+        islogin = False;
+        return render_template('publicItems.html', category = category, cate = Categories,  items = Items, isLogin = islogin )
+    else:
+         if 'user_id' in login_session:
+            if creator.id != login_session['user_id']:
+               islogin = True
+               return render_template('publicItems.html', category = category, cate = Categories, items = Items, isLogin = islogin)
+            else:
+                 islogin = True
+                 return render_template('Items.html', category = category, cate = Categories, items = Items, isLogin = islogin)
 
 @app.route('/category/<int:category_id>/Items/<int:item_id>/')
 def ItemDescription(category_id, item_id):
