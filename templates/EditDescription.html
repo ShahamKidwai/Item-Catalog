@@ -1,4 +1,4 @@
-{%extends "Base.html"%}
+{% extends "ProtectedBase.html" %}
 {%block content%}
 {{ super()}}
 {% endblock %}
@@ -10,7 +10,7 @@
    <div class = "itemdes">Description</div>
    </label>
    <br>
-   <textarea name="description" placeholder="{{item.description}}"></textarea>
+   <textarea name="description" class = "destextarea" placeholder="{{item.description}}"></textarea>
    <br>
    <br>
    <input type='submit' value='Submit'>

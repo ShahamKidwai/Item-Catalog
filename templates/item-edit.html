@@ -1,4 +1,4 @@
-{%extends "Base.html"%}
+{% extends "ProtectedBase.html" %}
 {%block content%}
 {{ super()}}
 {% endblock %}
@@ -8,17 +8,17 @@
    <label>
    <div class = "itemtitle"> Title</div>
    </label>
-   <input type = 'text'  name = 'title' placeholder="{{item.title}}">
+   <input type = 'text'  name = 'title' class = "item-name" placeholder="{{item.title}}">
    <br>
    <label>
    <div class = "iteminfo">Description</div>
    </label>
-   <input type = 'text'  name = 'description' placeholder="{{item.description}}">
+   <input type = 'text'  name = 'description' class = "item-des" placeholder="{{item.description}}">
    <br>
    <label>
    <div class = "iteminfo">Category</div>
    </label>
-    <select name="category">
+    <select name="category" class = "edititem">
     {% for c in categories %}
 	  <option value = "{{c.id}}">{{c.name}}</option>
 	{% endfor %}
