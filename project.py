@@ -35,6 +35,7 @@ def catalogJSON():
     items_all = session.query(Item).all()   
     return jsonify(Category = [c.serialize for c in categories_all], Item = [i.serialize for i in items_all])
 
+
 @app.route('/login')
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
@@ -184,11 +185,16 @@ def newCategory():
    elif ('user_id' not in login_session):
         islogin = False
    if request.method == 'POST':
-      newCategory = Category(
-        name = request.form['name'], user_id = login_session['user_id'])
-      session.add(newCategory)
-      session.commit()
-      return redirect(url_for('showcategories'))
+      if 'user_id' not in login_session:
+           response = make_response(json.dumps('Please Login First.', 401))
+           response.headers['Content-Type'] = 'application/json'
+           return response
+      else:
+          newCategory = Category(
+          name = request.form['name'], user_id = login_session['user_id'])
+          session.add(newCategory)
+          session.commit()
+          return redirect(url_for('showcategories'))
    else:
        return render_template('newCategory.html')
 
@@ -241,17 +247,21 @@ def edititem(category_id, item_id):
         islogin = True
     elif ('user_id' not in login_session):
         islogin = False
-        
     if request.method == 'POST':
-       title = request.form['title']
-       description = request.form['description']
-       category_id = request.form['category']
-       uitem.title = title
-       uitem.description = description
-       uitem.category_id = category_id
-       session.add(uitem)
-       session.commit()
-       return redirect(url_for('showitems', category_id = category_id))
+        if 'user_id' not in login_session:
+           response = make_response(json.dumps('Please Login First.', 401))
+           response.headers['Content-Type'] = 'application/json'
+           return response
+        else:
+             title = request.form['title']
+             description = request.form['description']
+             category_id = request.form['category']
+             uitem.title = title
+             uitem.description = description
+             uitem.category_id = category_id
+             session.add(uitem)
+             session.commit()
+             return redirect(url_for('showitems', category_id = category_id))
     else:
          return render_template('item-edit.html', item = uitem, cate = Categories, category_id = category_id, cat = category, cats = cates, isLogin = islogin)
 
@@ -265,11 +275,16 @@ def editdescription(category_id, item_id):
     elif ('user_id' not in login_session):
         islogin = False
     if request.method == 'POST':
-       description = request.form['description']
-       uitem.description = description
-       session.add(uitem)
-       session.commit()
-       return redirect(url_for('ItemDescription', category_id = category_id, item_id = item_id))
+       if  'user_id' not in login_session:
+           response = make_response(json.dumps('Please Login First.', 401))
+           response.headers['Content-Type'] = 'application/json'
+           return response
+       else:
+            description = request.form['description']
+            uitem.description = description
+            session.add(uitem)
+            session.commit()
+            return redirect(url_for('ItemDescription', category_id = category_id, item_id = item_id))
     else:
          return render_template('EditDescription.html', item = uitem, category_id = category.id, cate = cates, cat = category, isLogin = islogin)
         
@@ -283,12 +298,17 @@ def deletedescription(category_id, item_id):
     if 'user_id' in login_session:
         islogin = True
     elif ('user_id' not in login_session):
-        islogin = False
+          islogin = False
     if request.method == 'POST':
-       uitem.description = " "
-       session.add(uitem)
-       session.commit()
-       return redirect(url_for('ItemDescription', category_id = category_id, item_id = item_id))
+       if  'user_id' not in login_session:
+            response = make_response(json.dumps('Please Login First.', 401))
+            response.headers['Content-Type'] = 'application/json'
+            return response
+       else:
+            uitem.description = " "
+            session.add(uitem)
+            session.commit()
+            return redirect(url_for('ItemDescription', category_id = category_id, item_id = item_id))
     else:
          return render_template('DeleteDescription.html', item = uitem, cate = Categories, cat = category, category_id = category.id, isLogin = islogin)
         
@@ -300,10 +320,15 @@ def newitem(category_id):
      elif ('user_id' not in login_session):
         islogin = False
      if request.method == 'POST':
-        newItem = Item(title=request.form['name'], description=request.form['description'],  category_id= request.form['category'], user_id=login_session['user_id'])
-        session.add(newItem)
-        session.commit()
-        return redirect(url_for('showitems', category_id = category_id))
+         if 'user_id' not in login_session:
+             response = make_response(json.dumps('Please Login First.', 401))
+             response.headers['Content-Type'] = 'application/json'
+             return response
+         else:
+              newItem = Item(title=request.form['name'], description=request.form['description'],  category_id= request.form['category'], user_id=login_session['user_id'])
+              session.add(newItem)
+              session.commit()
+              return redirect(url_for('showitems', category_id = category_id))
      else:
           categories = session.query(Category).all()
           category = session.query(Category).filter_by(id = category_id).one()
@@ -319,9 +344,14 @@ def delete_item(category_id, item_id):
     elif ('user_id' not in login_session):
         islogin = False
     if request.method == 'POST':
-       session.delete(itemToDelete)
-       session.commit()
-       return redirect(url_for('showitems', category_id = category_id))
+       if 'user_id' not in login_session:
+           response = make_response(json.dumps('Please Login First.', 401))
+           response.headers['Content-Type'] = 'application/json'
+           return response
+       else:
+            session.delete(itemToDelete)
+            session.commit()
+            return redirect(url_for('showitems', category_id = category_id))
     else:
          return render_template('DeleteItem.html', i = itemToDelete, cate = Categories, isLogin = islogin)
 
@@ -345,7 +375,10 @@ def createUser(login_session):
     user = session.query(User).filter_by(email = login_session['email']).one()
     return user.id
 
-
+def respondToClient(description, status_code):
+    response = make_response(json.dumps(description), status_code)
+    response.headers['Content-Type'] = 'application/json'
+    return response
 
 if __name__ == '__main__':
      app.secret_key = 'super secret key'
