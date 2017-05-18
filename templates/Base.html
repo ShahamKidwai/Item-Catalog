@@ -43,19 +43,15 @@
     height: 45px;
     margin-left: 25px;
 }
-
      .header{
        font-size: 35px;
       }
-
      .editdel {
         display: block;
       } 
-
      .col-md-2 {
        border-right-style: ridge;
       }
-
      .container {
       margin-left: auto;
       margin-right: auto;
@@ -66,11 +62,9 @@
        color: azure;
        text-align: center; 
      }
-
     .description{
       font-size: 20px;
      }
-
     .item-name {
      font-size: xx-large;
     }
@@ -81,7 +75,6 @@
 	.columheading {
 	   font-size: 35px;
 	}
-
 	p.heading {
      color: azure;
     text-align: center;
@@ -90,7 +83,6 @@
     .iteminfo{
      font-size: x-large;
      }
-
     .itemdes{
        font-size: 25px;
        margin-top: 12px;
@@ -113,7 +105,11 @@
 	 
 	button.btn.btn-success {
        margin-top: 6px;
-     } 
+     }
+	 
+	 .googSignin {
+    display: inline-flex;
+}
 	</style>
      <meta charset="utf-8">
      <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -129,12 +125,31 @@
 	   <p class="h1 heading">Item Catalog</p>
        </div>
        <div class = "col-md-2">
-	   <div class = "container">
-             <div{% if isLogin %} style = 'display: none;' {% endif %}><a class = "loginlogout" href="{{ url_for('showLogin',  next=request.url)}}"><button type="button" class="btn btn-success">Login</button></a></div>
-             <div{% if not isLogin %} style = 'display: none;' {% endif %}><a class = "loginlogout" href="{{url_for('logout',  next=request.url)}}"><button type="button" class="btn btn-success">Logout</button></a></div>
+	     <div{% if isLogin %} style = 'display: none;' {% endif %}><button class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-medium">Login</button></div>
+
+			 <div class="modal fade bd-example-modal-medium">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">User Login </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class = "googSignin"><p><a class = "loginlogout" href="{{ url_for('showLogin',  next=request.url)}}">Sign in using Google.</a></p> <a class = "loginlogout" href="{{ url_for('showLogin',  next=request.url)}}"><div class = "googleicon"><img src="/static/googleicon.png" alt="Smiley face" height="42" width="42"></div></a></div>
+		<br>
+		<br>
+		<br>
+		<br>
+	  </div>
+    </div>
+  </div>
+</div>
+      <div{% if not isLogin %} style = 'display: none;' {% endif %}><a class = "loginlogout" href="{{url_for('logout',  next=request.url)}}"><button type="button" class="btn btn-success">Logout</button></a></div>
+	  </div>
 	  </div>
 	  </nav>
-	  </div>
 	 <div class = "container-fluid">
 	 <div class = "row">
 	 <div class = "col-md-2">
